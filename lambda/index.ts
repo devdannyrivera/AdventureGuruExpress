@@ -1,10 +1,15 @@
 import * as Alexa from 'ask-sdk-core'
 import { ExpressAdapter } from 'ask-sdk-express-adapter'
 import { CancelOrStopIntentHandler } from './intents/cancelOrStopIntentHandler'
+import { HelpIntentHandler } from './intents/helpIntentHandler'
 import { LaunchRequestHandler } from './intents/launchRequestHandler'
 
 const skill = Alexa.SkillBuilders.custom()
-  .addRequestHandlers(LaunchRequestHandler, CancelOrStopIntentHandler)
+  .addRequestHandlers(
+    LaunchRequestHandler,
+    HelpIntentHandler,
+    CancelOrStopIntentHandler
+  )
   .addErrorHandlers()
   .create()
 
