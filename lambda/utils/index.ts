@@ -40,7 +40,7 @@ const addNewUser = (handlerInput: HandlerInput) => {
         S: 'TBD-USERAPI',
       },
       PlayerNumber: {
-        S: `${parseInt((Math.random() * 1000).toString(), 10)}`,
+        S: `${Math.ceil(Math.random() * 1000)}`,
       },
       DeviceId: {
         S: System.device?.deviceId,
@@ -67,4 +67,28 @@ const addNewUser = (handlerInput: HandlerInput) => {
   })
 }
 
-export { isReturningUser, addNewUser }
+const getRandomFact = async () => {
+  const { Count } = await dynamoDB
+    .scan({ Select: 'COUNT', TableName: 'AdvgFunFacts' })
+    .promise()
+
+  const randomNum = Math.ceil(Math.random() * (Count || 0))
+
+  const params: GetItemInput = {
+    TableName: 'AdvgFunFacts',
+    Key: {
+      RecordNumber: {
+        S: `${randomNum}`,
+      },
+    },
+  }
+
+  const data = await dynamoDB.getItem(params).promise()
+
+  return (
+    data.Item!.Text.S ||
+    'Egypt is known for its longest history among the modern nations.'
+  )
+}
+
+export { isReturningUser, addNewUser, getRandomFact }
